@@ -17,6 +17,9 @@ const startServer = () => {
         test: 1
       });
     });
+    socket.on("line-finished", (data) => {
+      console.log(data);
+    });
     socket.on("disconnected", () => {
       console.log(`User disconnected: ${socket.id}`);
     });
