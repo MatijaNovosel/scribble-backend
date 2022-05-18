@@ -23,7 +23,7 @@ const startServer = () => {
   });
 
   server.listen(port, () => {
-    console.log(`Serving on address: http://localhost:${port}`);
+    console.log(`Serving on address: http://127.0.0.1:${port}`);
   });
 };
 
