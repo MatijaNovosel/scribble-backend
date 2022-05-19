@@ -1,9 +1,12 @@
 import createApp from "./express";
 import { createServer } from "http";
-import { Server } from "socket.io";
+import { Server, Socket } from "socket.io";
+import { drawingHandler } from "./socket/drawing/drawingHandler";
+import { socketHandler } from "./socket/general/socketHandler";
 import "dotenv/config";
 
 const port = process.env.PORT;
+let activeUserSockets: Socket[] = [];
 
 const startServer = () => {
   const app = createApp();
@@ -11,18 +14,11 @@ const startServer = () => {
   const io = new Server(server);
 
   io.on("connection", (socket) => {
-    console.log(`User connected: ${socket.id}`);
-    socket.on("test", () => {
-      io.emit("test-emit", {
-        test: 1
-      });
+    activeUserSockets.push(socket);
+    socketHandler(socket, () => {
+      activeUserSockets = activeUserSockets.filter((socket) => socket.id !== socket.id);
     });
-    socket.on("line-finished", (data) => {
-      console.log(data);
-    });
-    socket.on("disconnected", () => {
-      console.log(`User disconnected: ${socket.id}`);
-    });
+    drawingHandler(socket);
   });
 
   server.listen(port, () => {
