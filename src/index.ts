@@ -1,12 +1,15 @@
 import createApp from "./express";
 import { createServer } from "http";
-import { Server, Socket } from "socket.io";
+import { Server } from "socket.io";
 import { drawingHandler } from "./socket/drawing/drawingHandler";
 import { socketHandler } from "./socket/general/socketHandler";
+import { lobbyHandler } from "./socket/lobby/lobbyHandler";
+import { UserSocketData } from "./models/userData";
+import { randomUUID } from "crypto";
 import "dotenv/config";
 
 const port = process.env.PORT;
-let activeUserSockets: Socket[] = [];
+let activeConnections: UserSocketData[] = [];
 
 const startServer = () => {
   const app = createApp();
@@ -14,11 +17,16 @@ const startServer = () => {
   const io = new Server(server);
 
   io.on("connection", (socket) => {
-    activeUserSockets.push(socket);
+    activeConnections.push({
+      socket,
+      userId: randomUUID(),
+      username: null
+    });
     socketHandler(socket, () => {
-      activeUserSockets = activeUserSockets.filter((socket) => socket.id !== socket.id);
+      activeConnections = activeConnections.filter((connection) => connection.socket.id !== socket.id);
     });
     drawingHandler(socket);
+    lobbyHandler(socket);
   });
 
   server.listen(port, () => {
