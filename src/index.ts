@@ -1,11 +1,11 @@
 import "dotenv/config";
 import createApp from "./express";
+import GameManager from "./gameManager";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import { drawingHandler } from "./socket/drawing/drawingHandler";
 import { socketHandler } from "./socket/general/socketHandler";
 import { lobbyHandler } from "./socket/lobby/lobbyHandler";
-import GameManager from "./gameManager";
 
 const port = process.env.PORT;
 
@@ -17,9 +17,20 @@ const startServer = () => {
   const gameManager = new GameManager();
 
   io.on("connection", (socket) => {
-    socketHandler(socket, () => {
-      // Remove player from lobbies when socket disconnects
+    gameManager.connect({
+      socket,
+      userId: socket.id,
+      username: null
     });
+    socketHandler(
+      socket,
+      () => {
+        // Disconnect callback
+        // Remove player from lobbies when socket disconnects
+        gameManager.disconnect(socket.id);
+      },
+      gameManager
+    );
     drawingHandler(socket);
     lobbyHandler(socket, gameManager);
   });

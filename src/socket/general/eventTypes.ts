@@ -1,3 +1,4 @@
 export default {
-  disconnected: "disconnected"
+  disconnected: "disconnected",
+  userCustomized: "user-customized"
 };
