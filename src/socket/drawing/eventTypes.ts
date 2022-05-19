@@ -1,4 +1,4 @@
 export default {
-  eventFinished: "line-finished",
+  lineFinished: "line-finished",
   updateCanvas: "update-canvas"
 };
