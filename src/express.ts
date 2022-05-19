@@ -17,12 +17,6 @@ const createApp = (): express.Application => {
   app.use(cors());
   app.use(express.json());
 
-  app.get("/test", (_req, res) => {
-    res.send({
-      test: 1
-    });
-  });
-
   app.get("/", (_req, res) => {
     res.send("Hello!");
   });
