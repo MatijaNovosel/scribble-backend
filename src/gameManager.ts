@@ -3,8 +3,8 @@ import { Lobby, LobbyCreate, LobbyJoin, LobbyLeave } from "./models/lobby";
 import { CustomizeUserData, User } from "./models/user";
 
 class GameManager {
-  activeLobbies: Lobby[];
-  activeUsers: User[];
+  activeLobbies: Lobby[] = [];
+  activeUsers: User[] = [];
 
   connect(user: User) {
     this.activeUsers.push(user);
