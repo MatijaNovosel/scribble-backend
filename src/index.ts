@@ -22,17 +22,10 @@ const startServer = () => {
       userId: socket.id,
       username: null
     });
-    socketHandler(
-      socket,
-      () => {
-        // Disconnect callback
-        // Remove player from lobbies when socket disconnects
-        gameManager.disconnect(socket.id);
-      },
-      gameManager
-    );
-    drawingHandler(socket);
+    socket.emit("lobby-list", gameManager.activeLobbies);
+    socketHandler(socket, gameManager);
     lobbyHandler(socket, gameManager);
+    drawingHandler(socket);
   });
 
   server.listen(port, () => {

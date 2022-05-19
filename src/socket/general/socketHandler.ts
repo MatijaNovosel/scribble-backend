@@ -3,13 +3,9 @@ import GameManager from "@server/gameManager";
 import eventTypes from "./eventTypes";
 import { CustomizeUserData } from "@server/models/user";
 
-export const socketHandler = (
-  socket: Socket,
-  disconnectCallback: Function,
-  gameManager: GameManager
-) => {
-  socket.on(eventTypes.disconnected, () => {
-    disconnectCallback();
+export const socketHandler = (socket: Socket, gameManager: GameManager) => {
+  socket.on(eventTypes.disconnected, (socket) => {
+    gameManager.disconnect(socket.id);
   });
   socket.on(eventTypes.userCustomized, (data: CustomizeUserData) => {
     gameManager.customizeUser(data);
