@@ -3,6 +3,7 @@ import { Socket } from "socket.io";
 export interface LobbyCreate {
   name: string;
   creatorId: string;
+  password: string;
   createdAt: Date;
   socket: Socket;
   playerCapacity: number;
@@ -13,6 +14,7 @@ export interface LobbyJoin {
   lobbyId: string;
   entryTime: Date;
   socket: Socket;
+  password: string;
 }
 
 export interface LobbyLeave {
@@ -24,6 +26,7 @@ export interface LobbyLeave {
 export interface Lobby {
   id: string;
   name: string;
+  password: string;
   createdAt: Date;
   creatorId: string;
   sockets: Socket[];

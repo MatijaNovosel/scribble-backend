@@ -24,10 +24,15 @@ class GameManager {
     }
   }
 
-  joinLobby({ lobbyId, socket }: LobbyJoin): void {
-    const lobby = this.activeLobbies.find((lobby) => lobby.id === lobbyId);
+  joinLobby({ lobbyId, socket, password }: LobbyJoin): void {
+    const lobby = this.activeLobbies.find(
+      (lobby) => lobby.id === lobbyId && lobby.password === password
+    );
     if (lobby) {
       lobby.sockets.push(socket);
+      socket.emit("lobby-joined", {
+        socketId: socket.id
+      });
       console.log(`User with id ${socket.id} joined lobbby ${lobbyId}!`);
     } else {
       socket.emit("invalid-lobby-id", {
@@ -42,7 +47,8 @@ class GameManager {
     createdAt,
     name,
     playerCapacity,
-    roundTime
+    roundTime,
+    password
   }: LobbyCreate): void {
     const id = randomUUID();
     this.activeLobbies.push({
@@ -52,7 +58,8 @@ class GameManager {
       playerCapacity,
       roundTime,
       sockets: [socket],
-      id
+      id,
+      password
     });
     console.log(`Lobby with id ${id} created!`);
   }

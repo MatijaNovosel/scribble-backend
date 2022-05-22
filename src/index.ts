@@ -10,11 +10,11 @@ import { lobbyHandler } from "./socket/lobby/lobbyHandler";
 const port = process.env.PORT;
 
 const startServer = () => {
+  const gameManager = new GameManager();
+
   const app = createApp();
   const server = createServer(app);
   const io = new Server(server);
-
-  const gameManager = new GameManager();
 
   io.on("connection", (socket) => {
     gameManager.connect({
@@ -22,7 +22,6 @@ const startServer = () => {
       userId: socket.id,
       username: null
     });
-    socket.emit("lobby-list", gameManager.activeLobbies);
     socketHandler(socket, gameManager);
     lobbyHandler(socket, gameManager);
     drawingHandler(socket);
