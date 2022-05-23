@@ -35,7 +35,7 @@ class GameManager {
       });
       console.log(`User with id ${socket.id} joined lobbby ${lobbyId}!`);
     } else {
-      socket.emit("invalid-lobby-id", {
+      socket.emit("lobby-join-failure", {
         lobbyId
       });
     }
@@ -62,6 +62,9 @@ class GameManager {
       password
     });
     console.log(`Lobby with id ${id} created!`);
+    socket.emit("lobby-created-success", {
+      socketId: socket.id
+    });
   }
 
   leaveLobby({ lobbyId, socket }: LobbyLeave) {

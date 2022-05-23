@@ -1,4 +1,5 @@
 export default {
   lobbyJoined: "lobby-joined",
-  lobbyLeft: "lobby-left"
+  lobbyLeft: "lobby-left",
+  lobbyCreated: "lobby-created"
 };
