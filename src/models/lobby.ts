@@ -10,6 +10,15 @@ export interface LobbyCreate {
   roundTime: number; // Seconds
 }
 
+export interface LobbyCreateStart {
+  name: string;
+  creatorId: string;
+  password: string;
+  createdAt: Date;
+  playerCapacity: number;
+  roundTime: number; // Seconds
+}
+
 export interface LobbyJoin {
   lobbyId: string;
   entryTime: Date;

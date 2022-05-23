@@ -1,4 +1,4 @@
-import { LobbyCreate } from "./../../models/lobby";
+import { LobbyCreateStart } from "./../../models/lobby";
 import { UserSocketData } from "../../models/userData";
 import { Socket } from "socket.io";
 import eventTypes from "./eventTypes";
@@ -22,8 +22,8 @@ export const lobbyHandler = (socket: Socket, gameManager: GameManager) => {
     });
   });
   socket.on(
-    eventTypes.lobbyCreated,
-    ({ creatorId, name, password, playerCapacity, roundTime, socket }: LobbyCreate) => {
+    eventTypes.createLobby,
+    ({ creatorId, name, password, playerCapacity, roundTime }: LobbyCreateStart) => {
       gameManager.createLobby({
         createdAt: new Date(),
         creatorId,

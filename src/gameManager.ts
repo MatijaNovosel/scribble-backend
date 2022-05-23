@@ -63,7 +63,8 @@ class GameManager {
     });
     console.log(`Lobby with id ${id} created!`);
     socket.emit("lobby-created-success", {
-      socketId: socket.id
+      socketId: socket.id,
+      lobbyId: id
     });
   }
 
