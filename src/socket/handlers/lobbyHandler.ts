@@ -1,12 +1,12 @@
-import { LobbyCreateStart } from "./../../models/lobby";
+import { LobbyCreateStart } from "../../models/lobby";
 import { UserSocketData } from "../../models/userData";
 import { Socket } from "socket.io";
-import eventTypes from "./eventTypes";
+import EVENT_TYPES from "../eventTypes";
 import GameManager from "@server/gameManager";
 import { LobbyJoin } from "@server/models/lobby";
 
 export const lobbyHandler = (socket: Socket, gameManager: GameManager) => {
-  socket.on(eventTypes.lobbyJoined, ({ lobbyId, password }: LobbyJoin) => {
+  socket.on(EVENT_TYPES.LOBBY_JOINED, ({ lobbyId, password }: LobbyJoin) => {
     gameManager.joinLobby({
       entryTime: new Date(),
       lobbyId,
@@ -14,7 +14,7 @@ export const lobbyHandler = (socket: Socket, gameManager: GameManager) => {
       password
     });
   });
-  socket.on(eventTypes.lobbyLeft, ({ lobbyId }: UserSocketData) => {
+  socket.on(EVENT_TYPES.LOBBY_LEFT, ({ lobbyId }: UserSocketData) => {
     gameManager.leaveLobby({
       leaveTime: new Date(),
       lobbyId,
@@ -22,7 +22,7 @@ export const lobbyHandler = (socket: Socket, gameManager: GameManager) => {
     });
   });
   socket.on(
-    eventTypes.createLobby,
+    EVENT_TYPES.CREATE_LOBBY,
     ({ creatorId, name, password, playerCapacity, roundTime }: LobbyCreateStart) => {
       gameManager.createLobby({
         createdAt: new Date(),

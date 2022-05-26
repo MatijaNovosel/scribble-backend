@@ -1,11 +1,11 @@
 import { LineFinishedData } from "@server/models/line";
 import { Socket } from "socket.io";
-import eventTypes from "./eventTypes";
+import EVENT_TYPES from "../eventTypes";
 
 export const drawingHandler = (socket: Socket) => {
-  socket.on(eventTypes.lineFinished, (data: LineFinishedData) => {
+  socket.on(EVENT_TYPES.LINE_FINISHED, (data: LineFinishedData) => {
     if (data.socketId !== socket.id) {
-      socket.emit(eventTypes.updateCanvas, data);
+      socket.emit(EVENT_TYPES.UPDATE_CANVAS, data);
     }
   });
 };

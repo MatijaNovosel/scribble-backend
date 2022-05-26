@@ -3,9 +3,9 @@ import createApp from "./express";
 import GameManager from "./gameManager";
 import { createServer } from "http";
 import { Server } from "socket.io";
-import { drawingHandler } from "./socket/drawing/drawingHandler";
-import { socketHandler } from "./socket/general/socketHandler";
-import { lobbyHandler } from "./socket/lobby/lobbyHandler";
+import { drawingHandler } from "./socket/handlers/drawingHandler";
+import { socketHandler } from "./socket/handlers/socketHandler";
+import { lobbyHandler } from "./socket/handlers/lobbyHandler";
 
 const port = process.env.PORT;
 

@@ -1,6 +1,7 @@
 import { randomUUID } from "crypto";
 import { Lobby, LobbyCreate, LobbyJoin, LobbyLeave } from "./models/lobby";
 import { CustomizeUserData, User } from "./models/user";
+import EVENT_TYPES from "./socket/eventTypes";
 
 class GameManager {
   activeLobbies: Lobby[] = [];
@@ -20,7 +21,7 @@ class GameManager {
       user.username = username;
       console.log(`Username for user with id ${socket.id} changed!`);
     } else {
-      socket.emit("invalid-user-id");
+      socket.emit(EVENT_TYPES.INVALID_USER_ID);
     }
   }
 
@@ -30,12 +31,12 @@ class GameManager {
     );
     if (lobby) {
       lobby.sockets.push(socket);
-      socket.emit("lobby-joined", {
+      socket.emit(EVENT_TYPES.LOBBY_JOINED, {
         socketId: socket.id
       });
       console.log(`User with id ${socket.id} joined lobbby ${lobbyId}!`);
     } else {
-      socket.emit("lobby-join-failure", {
+      socket.emit(EVENT_TYPES.LOBBY_JOIN_FAILURE, {
         lobbyId
       });
     }
@@ -62,7 +63,7 @@ class GameManager {
       password
     });
     console.log(`Lobby with id ${id} created!`);
-    socket.emit("lobby-created-success", {
+    socket.emit(EVENT_TYPES.LOBBY_CREATED_SUCCESS, {
       socketId: socket.id,
       lobbyId: id
     });
@@ -73,12 +74,12 @@ class GameManager {
     if (lobby) {
       lobby.sockets = lobby.sockets.filter((socket) => socket.id !== socket.id);
       lobby.sockets.forEach((socket) => {
-        socket.emit("player-left", {
+        socket.emit(EVENT_TYPES.PLAYER_LEFT, {
           socketId: socket.id
         });
       });
     } else {
-      socket.emit("invalid-lobby-id", {
+      socket.emit(EVENT_TYPES.INVALID_LOBBY_ID, {
         lobbyId
       });
     }
