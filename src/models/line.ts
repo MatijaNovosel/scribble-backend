@@ -1,7 +1,7 @@
 import { Offset } from "./offset";
 
 export interface LineFinishedData {
-  lines: Line[];
+  line: Line;
   socketId: string;
 }
 
