@@ -25,7 +25,7 @@ const startServer = () => {
     });
     socketHandler(socket, gameManager);
     lobbyHandler(socket, gameManager);
-    drawingHandler(socket);
+    drawingHandler(socket, gameManager);
   });
 
   server.listen(port, () => {
