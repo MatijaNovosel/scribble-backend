@@ -17,6 +17,7 @@ const startServer = () => {
   const io = new Server(server);
 
   io.on("connection", (socket) => {
+    console.log(`${socket.id} connected!`);
     gameManager.connect({
       socket,
       userId: socket.id,
