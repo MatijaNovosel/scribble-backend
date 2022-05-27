@@ -6,6 +6,7 @@ import { Server } from "socket.io";
 import { drawingHandler } from "./socket/handlers/drawingHandler";
 import { socketHandler } from "./socket/handlers/socketHandler";
 import { lobbyHandler } from "./socket/handlers/lobbyHandler";
+import { log } from "./utils/helpers";
 
 const port = process.env.PORT;
 
@@ -17,7 +18,7 @@ const startServer = () => {
   const io = new Server(server);
 
   io.on("connection", (socket) => {
-    console.log(`${socket.id} connected!`);
+    log(`${socket.id} connected!`);
     gameManager.connect({
       socket,
       userId: socket.id,
@@ -29,7 +30,7 @@ const startServer = () => {
   });
 
   server.listen(port, () => {
-    console.log(`Serving on address: http://127.0.0.1:${port}`);
+    log(`Serving on address: http://127.0.0.1:${port}`);
   });
 };
 

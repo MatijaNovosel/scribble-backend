@@ -2,6 +2,7 @@ import { randomUUID } from "crypto";
 import { Lobby, LobbyCreate, LobbyJoin, LobbyLeave } from "./models/lobby";
 import { CustomizeUserData, User } from "./models/user";
 import EVENT_TYPES from "./socket/eventTypes";
+import { log } from "./utils/helpers";
 
 class GameManager {
   activeLobbies: Lobby[] = [];
@@ -19,22 +20,29 @@ class GameManager {
     const user = this.activeUsers.find((user) => user.userId === socket.id);
     if (user) {
       user.username = username;
-      console.log(`Username for user with id ${socket.id} changed!`);
+      log(`Username for user with id ${socket.id} changed!`);
     } else {
       socket.emit(EVENT_TYPES.INVALID_USER_ID);
     }
   }
 
   joinLobby({ lobbyId, socket, password }: LobbyJoin): void {
+    const socketId = socket.id;
     const lobby = this.activeLobbies.find(
       (lobby) => lobby.id === lobbyId && lobby.password === password
     );
     if (lobby) {
       lobby.sockets.push(socket);
-      socket.emit(EVENT_TYPES.LOBBY_JOINED, {
-        socketId: socket.id
-      });
-      console.log(`User with id ${socket.id} joined lobbby ${lobbyId}!`);
+      lobby.sockets
+        .filter((socket) => socket.id !== socketId)
+        .forEach((socket) => {
+          socket.emit(EVENT_TYPES.LOBBY_JOINED, {
+            socketId: socket.id,
+            lobbyId: lobbyId,
+            allSocketIds: lobby.sockets.map((s) => s.id)
+          });
+        });
+      log(`User with id ${socket.id} joined lobbby ${lobbyId}!`);
     } else {
       socket.emit(EVENT_TYPES.LOBBY_JOIN_FAILURE, {
         lobbyId
@@ -62,7 +70,7 @@ class GameManager {
       id,
       password
     });
-    console.log(`Lobby with id ${id} created!`);
+    log(`Lobby with id ${id} created!`);
     socket.emit(EVENT_TYPES.LOBBY_CREATED_SUCCESS, {
       socketId: socket.id,
       lobbyId: id
