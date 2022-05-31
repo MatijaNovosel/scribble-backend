@@ -9,6 +9,8 @@ enum EventTypes {
   LOBBY_CREATED_SUCCESS = "lobby-created-success",
   PLAYER_LEFT = "player-left",
   INVALID_LOBBY_ID = "invalid-lobby-id",
+  LOBBY_DISBANDED = "lobby-disbanded",
+  DISBAND_LOBBY = "disband-lobby",
   // General
   DISCONNECTED = "disconnected",
   USER_CUSTOMIZED = "user-customized",

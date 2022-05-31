@@ -1,5 +1,4 @@
-import { LobbyCreateStart } from "../../models/lobby";
-import { UserSocketData } from "../../models/userData";
+import { LobbyCreateStart, LobbyDisband, LobbyLeave } from "../../models/lobby";
 import { Socket } from "socket.io";
 import EVENT_TYPES from "../eventTypes";
 import GameManager from "@server/gameManager";
@@ -14,7 +13,7 @@ export const lobbyHandler = (socket: Socket, gameManager: GameManager) => {
       password
     });
   });
-  socket.on(EVENT_TYPES.LOBBY_LEFT, ({ lobbyId }: UserSocketData) => {
+  socket.on(EVENT_TYPES.LOBBY_LEFT, ({ lobbyId }: LobbyLeave) => {
     gameManager.leaveLobby({
       leaveTime: new Date(),
       lobbyId,
@@ -35,4 +34,10 @@ export const lobbyHandler = (socket: Socket, gameManager: GameManager) => {
       });
     }
   );
+  socket.on(EVENT_TYPES.DISBAND_LOBBY, ({ lobbyId }: LobbyDisband) => {
+    gameManager.disbandLobby({
+      lobbyId,
+      socket
+    });
+  });
 };

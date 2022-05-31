@@ -42,3 +42,8 @@ export interface Lobby {
   playerCapacity: number;
   roundTime: number; // Seconds
 }
+
+export interface LobbyDisband {
+  lobbyId: string;
+  socket: Socket;
+}
