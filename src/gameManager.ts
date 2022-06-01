@@ -8,6 +8,18 @@ class GameManager {
   activeUsers: User[] = [];
 
   /**
+   * Emits an event to all connected users.
+   * @param {EVENT_TYPES} eventType - Event type.
+   * @param {any} data - Data to emit.
+   * @param {string} senderId - Id of the sender.
+   */
+  emitToAllUsers(eventType: EVENT_TYPES, data: any, senderId: string) {
+    this.activeUsers
+      .filter((user) => user.userId !== senderId)
+      .forEach((user) => user.socket.emit(eventType, data));
+  }
+
+  /**
    * Connects the user to the Scribble game manager instance.
    * @param {User} user - Information about the connecting user.
    */
