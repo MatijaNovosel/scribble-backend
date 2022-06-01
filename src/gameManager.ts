@@ -166,10 +166,6 @@ class GameManager {
 
   /**
    * Generates a unique 6 character id for a lobby.
-   * @param {LobbyDisband} data - Lobby leave data.
-   * @param {string} data.lobbyId - Lobby id.
-   * @param {Socket} data.socket - Socket requesting to leave.
-   * @return {string} A unique lobby id.
    */
   generateLobbyId(): string {
     let id = range(0, 6, 1)
