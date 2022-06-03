@@ -35,4 +35,15 @@ const range = (from: number, to: number, step: number): number[] => {
   return Array.from(Array(Math.floor((to - from) / step) + 1)).map((_v, k) => from + k * step);
 };
 
-export { log, sample, randomCharacter, range };
+/**
+ * Generates a string with random characters of variable length.
+ * @param {number} length - Resulting starting length.
+ * @return {string} A string with random characters of variable length.
+ */
+const generateRandomString = (length: number) => {
+  return range(0, length, 1)
+    .map(() => randomCharacter())
+    .join();
+};
+
+export { log, sample, randomCharacter, range, generateRandomString };

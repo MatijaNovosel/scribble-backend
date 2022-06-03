@@ -1,21 +1,26 @@
 import { Lobby, LobbyCreate, LobbyDisband, LobbyJoin, LobbyLeave } from "./models/lobby";
 import { CustomizeUserData, User } from "./models/user";
 import EVENT_TYPES from "./socket/eventTypes";
-import { log, randomCharacter, range } from "./utils/helpers";
+import { generateRandomString, log } from "./utils/helpers";
 
 class GameManager {
   activeLobbies: Lobby[] = [];
   activeUsers: User[] = [];
 
   /**
-   * Emits an event to all connected users.
+   * Emits an event to all connected users (and optionally not to the sender).
    * @param {EVENT_TYPES} eventType - Event type.
    * @param {any} data - Data to emit.
    * @param {string} senderId - Id of the sender.
    */
-  emitToAllUsers(eventType: EVENT_TYPES, data: any, senderId: string) {
+  emitToAllUsers(eventType: EVENT_TYPES, data: any, senderId?: string) {
     this.activeUsers
-      .filter((user) => user.userId !== senderId)
+      .filter((user) => {
+        if (senderId) {
+          return user.userId !== senderId;
+        }
+        return true;
+      })
       .forEach((user) => user.socket.emit(eventType, data));
   }
 
@@ -168,16 +173,12 @@ class GameManager {
    * Generates a unique 6 character id for a lobby.
    */
   generateLobbyId(): string {
-    let id = range(0, 6, 1)
-      .map(() => randomCharacter())
-      .join();
+    let id = generateRandomString(6);
 
     while (
       this.activeLobbies.map((lobby) => lobby.id).find((lobbyId) => lobbyId != id) != undefined
     ) {
-      id = range(0, 6, 1)
-        .map(() => randomCharacter())
-        .join();
+      id = generateRandomString(6);
     }
 
     return id;
