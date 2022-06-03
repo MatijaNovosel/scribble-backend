@@ -81,9 +81,7 @@ class GameManager {
         });
       log(`User with id ${socket.id} joined lobbby ${lobbyId}!`);
     } else {
-      socket.emit(EVENT_TYPES.LOBBY_JOIN_FAILURE, {
-        lobbyId
-      });
+      socket.emit(EVENT_TYPES.LOBBY_JOIN_FAILURE, lobbyId);
     }
   }
 
@@ -107,7 +105,7 @@ class GameManager {
     roundTime,
     password
   }: LobbyCreate) {
-    const id = this.generateLobbyId();
+    const id = generateRandomString(6);
     this.activeLobbies.push({
       name,
       creatorId,
@@ -167,21 +165,6 @@ class GameManager {
         lobbyId
       });
     }
-  }
-
-  /**
-   * Generates a unique 6 character id for a lobby.
-   */
-  generateLobbyId(): string {
-    let id = generateRandomString(6);
-
-    while (
-      this.activeLobbies.map((lobby) => lobby.id).find((lobbyId) => lobbyId != id) != undefined
-    ) {
-      id = generateRandomString(6);
-    }
-
-    return id;
   }
 }
 

@@ -40,10 +40,10 @@ const range = (from: number, to: number, step: number): number[] => {
  * @param {number} length - Resulting starting length.
  * @return {string} A string with random characters of variable length.
  */
-const generateRandomString = (length: number) => {
+const generateRandomString = (length: number): string => {
   return range(0, length, 1)
     .map(() => randomCharacter())
-    .join();
+    .join("");
 };
 
 export { log, sample, randomCharacter, range, generateRandomString };
