@@ -63,7 +63,7 @@ class GameManager {
    * @param {Socket} data.socket - Socket requesting to join.
    * @param {string} data.password - Lobby password.
    */
-  joinLobby({ lobbyId, socket, password }: LobbyJoin): void {
+  joinLobbyAttempt({ lobbyId, socket, password }: LobbyJoin): void {
     const socketId = socket.id;
     const lobby = this.activeLobbies.find(
       (lobby) => lobby.id === lobbyId && lobby.password === password
@@ -73,7 +73,7 @@ class GameManager {
       lobby.sockets
         .filter((socket) => socket.id !== socketId)
         .forEach((socket) => {
-          socket.emit(EVENT_TYPES.LOBBY_JOINED, {
+          socket.emit(EVENT_TYPES.LOBBY_JOIN_SUCCESS, {
             socketId: socket.id,
             lobbyId: lobbyId,
             allSocketIds: lobby.sockets.map((s) => s.id)

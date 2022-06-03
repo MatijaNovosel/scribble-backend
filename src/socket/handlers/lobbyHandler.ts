@@ -5,8 +5,8 @@ import GameManager from "@server/gameManager";
 import { LobbyJoin } from "@server/models/lobby";
 
 export const lobbyHandler = (socket: Socket, gameManager: GameManager) => {
-  socket.on(EVENT_TYPES.LOBBY_JOINED, ({ lobbyId, password }: LobbyJoin) => {
-    gameManager.joinLobby({
+  socket.on(EVENT_TYPES.LOBBY_JOIN_ATTEMPT, ({ lobbyId, password }: LobbyJoin) => {
+    gameManager.joinLobbyAttempt({
       entryTime: new Date(),
       lobbyId,
       socket,
