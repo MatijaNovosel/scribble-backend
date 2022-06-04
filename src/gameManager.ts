@@ -1,4 +1,11 @@
-import { Lobby, LobbyCreate, LobbyDisband, LobbyJoin, LobbyLeave } from "./models/lobby";
+import { Socket } from "socket.io";
+import {
+  Lobby,
+  LobbyCreate,
+  LobbyDisband,
+  LobbyJoinAttemptModel,
+  LobbyLeave
+} from "./models/lobby";
 import { CustomizeUserData, User } from "./models/user";
 import EVENT_TYPES from "./socket/eventTypes";
 import { generateRandomString, log } from "./utils/helpers";
@@ -22,6 +29,15 @@ class GameManager {
         return true;
       })
       .forEach((user) => user.socket.emit(eventType, data));
+  }
+
+  /**
+   * Attempt to find a connected socket with a specific id.
+   * @param {string} id - Id of the socket.
+   * @returns {Socket | undefined} The specified socket.
+   */
+  findSocket(id: string): Socket | undefined {
+    return this.activeUsers.map((user) => user.socket).find((socket) => socket.id === id);
   }
 
   /**
@@ -58,26 +74,28 @@ class GameManager {
 
   /**
    * Attempts to connect a user to a specific lobby.
-   * @param {LobbyJoin} data - Lobby join data.
+   * @param {LobbyJoinAttemptModel} data - Lobby join data.
    * @param {string} data.lobbyId - Lobby id.
    * @param {Socket} data.socket - Socket requesting to join.
    * @param {string} data.password - Lobby password.
    */
-  joinLobbyAttempt({ lobbyId, socket, password }: LobbyJoin): void {
+  joinLobbyAttempt({ lobbyId, socket, password }: LobbyJoinAttemptModel): void {
     const socketId = socket.id;
     const lobby = this.activeLobbies.find(
       (lobby) => lobby.id === lobbyId && lobby.password === password
     );
+
     if (lobby) {
       lobby.sockets.push(socket);
+      socket.emit(EVENT_TYPES.LOBBY_JOIN_SUCCESS, {
+        socketId: socket.id,
+        lobbyId: lobbyId,
+        allSocketIds: lobby.sockets.map((s) => s.id)
+      });
       lobby.sockets
         .filter((socket) => socket.id !== socketId)
         .forEach((socket) => {
-          socket.emit(EVENT_TYPES.LOBBY_JOIN_SUCCESS, {
-            socketId: socket.id,
-            lobbyId: lobbyId,
-            allSocketIds: lobby.sockets.map((s) => s.id)
-          });
+          socket.emit(EVENT_TYPES.LOBBY_JOINED, {});
         });
       log(`User with id ${socket.id} joined lobbby ${lobbyId}!`);
     } else {

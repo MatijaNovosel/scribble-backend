@@ -19,7 +19,7 @@ export interface LobbyCreateStart {
   roundTime: number; // Seconds
 }
 
-export interface LobbyJoin {
+export interface LobbyJoinAttemptModel {
   lobbyId: string;
   entryTime: Date;
   socket: Socket;

@@ -2,10 +2,10 @@ import { LobbyCreateStart, LobbyDisband, LobbyLeave } from "../../models/lobby";
 import { Socket } from "socket.io";
 import EVENT_TYPES from "../eventTypes";
 import GameManager from "@server/gameManager";
-import { LobbyJoin } from "@server/models/lobby";
+import { LobbyJoinAttemptModel } from "@server/models/lobby";
 
 export const lobbyHandler = (socket: Socket, gameManager: GameManager) => {
-  socket.on(EVENT_TYPES.LOBBY_JOIN_ATTEMPT, ({ lobbyId, password }: LobbyJoin) => {
+  socket.on(EVENT_TYPES.LOBBY_JOIN_ATTEMPT, ({ lobbyId, password }: LobbyJoinAttemptModel) => {
     gameManager.joinLobbyAttempt({
       entryTime: new Date(),
       lobbyId,
