@@ -9,7 +9,7 @@ const log = (message: string) => {
 /**
  * Returns a random item from the specified array.
  * @param {any[]} items - Array from which the item should be taken.
- * @return {any} Brief description of the returning value here.
+ * @return {any} A random item from the array.
  */
 function sample<T>(items: T[]): T {
   return items[Math.floor(Math.random() * items.length)];

@@ -10,6 +10,9 @@ import { CustomizeUserData, User } from "./models/user";
 import EVENT_TYPES from "./socket/eventTypes";
 import { generateRandomString, log } from "./utils/helpers";
 
+/**
+ * A class that handles most of the game logic and lobby systems.
+ */
 class GameManager {
   activeLobbies: Lobby[] = [];
   activeUsers: User[] = [];
@@ -87,15 +90,17 @@ class GameManager {
 
     if (lobby) {
       lobby.sockets.push(socket);
+      // Requesting socket was successful
       socket.emit(EVENT_TYPES.LOBBY_JOIN_SUCCESS, {
-        socketId: socket.id,
+        socketId,
         lobbyId: lobbyId,
         allSocketIds: lobby.sockets.map((s) => s.id)
       });
+      // Tell the other sockets that the requesting socket joined the lobby
       lobby.sockets
         .filter((socket) => socket.id !== socketId)
         .forEach((socket) => {
-          socket.emit(EVENT_TYPES.LOBBY_JOINED, {});
+          socket.emit(EVENT_TYPES.LOBBY_JOINED, socketId);
         });
       log(`User with id ${socket.id} joined lobbby ${lobbyId}!`);
     } else {
@@ -148,12 +153,13 @@ class GameManager {
    * @param {Socket} data.socket - Socket requesting to leave.
    */
   leaveLobby({ lobbyId, socket }: LobbyLeave) {
+    const socketId = socket.id;
     const lobby = this.activeLobbies.find((lobby) => lobby.id === lobbyId);
     if (lobby) {
-      lobby.sockets = lobby.sockets.filter((socket) => socket.id !== socket.id);
+      lobby.sockets = lobby.sockets.filter((socket) => socket.id !== socketId);
       lobby.sockets.forEach((socket) => {
         socket.emit(EVENT_TYPES.PLAYER_LEFT, {
-          socketId: socket.id
+          socketId
         });
       });
     } else {
@@ -170,12 +176,13 @@ class GameManager {
    * @param {Socket} data.socket - Socket requesting to leave.
    */
   disbandLobby({ lobbyId, socket }: LobbyDisband) {
+    const socketId = socket.id;
     const lobby = this.activeLobbies.find((lobby) => lobby.id === lobbyId);
     if (lobby) {
-      lobby.sockets = lobby.sockets.filter((socket) => socket.id !== socket.id);
+      lobby.sockets = lobby.sockets.filter((socket) => socket.id !== socketId);
       lobby.sockets.forEach((socket) => {
         socket.emit(EVENT_TYPES.LOBBY_DISBANDED, {
-          socketId: socket.id
+          socketId
         });
       });
     } else {
