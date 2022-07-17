@@ -1,2 +1,2 @@
-# scribble-backend
-Scribble app backend.
+<h1 align=center>Scribble backend</h1>
+<p align=center><a href="https://github.com/MatijaNovosel/scribble">Scribble</a> app backend.</p>
