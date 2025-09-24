@@ -5,9 +5,6 @@
   "repository": "https://github.com/MatijaNovosel/scribble-backend.git",
   "author": "Matija Novosel <mnovosel5@gmail.com>",
   "license": "MIT",
-  "engines": {
-    "node": "16.x"
-  },
   "scripts": {
     "start": "ts-node -r tsconfig-paths/register src/index"
   },
